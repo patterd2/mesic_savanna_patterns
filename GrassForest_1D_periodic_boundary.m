@@ -7,13 +7,13 @@ tic
 fprintf('\n');
 DO_MOVIE = 0; % i.e. write movie to avi file for playback, else just plots
 SPACE_TIME_PLOT = 1;
-FINAL_PLOT = 1;
+FINAL_PLOT = 0;
 %% Numerical method parameters
-L = 2*pi; % working on [0,L]
-N = 800; % N+1 grid points
+L = 1; % working on [0,L]
+N = 500; % N+1 grid points
 delta = L/N;  % spatial discretization parameter
 h = 0.05; % time discretisation parameter
-n = 5000; % number of time steps
+n = 10000; % number of time steps
 tau = (n-1)*h; % simulations time domain is [0,tau]
 %% Function definitions
 P_fun = @(x, p_0, p_1) p_0 + p_1.*x;
@@ -27,10 +27,10 @@ p_right=0;
 p_0=p_left;
 p_1=(p_right-p_left)/L;
 
-alpha = 4.5;
+alpha = 4.1;
 alpha_s = 0;
 
-r = 0.8;
+r = 0.74;
 
 f_0_ref = 0.1;
 f_1_ref = 0.9;
@@ -40,29 +40,29 @@ s_2 = 0.05;% s_2's standard value is 0.05
 linestyles = ['-',':','-.'];
 linecolor = ['r','k','b'];
 
-for IC = 2 % 1 for high grass IC, 2 for low grass IC, 3 for mixed spatial stripes between the two species, 4 for a sigmoidal transition, 5+ for random
-    disp = 0.1;
+for IC = 2 % 1 for high grass IC, 2 for low grass IC, 3 for mixed spatial stripes between the two species, 4 for a sigmoidal transition
+    disp = 0.1; % value of sigma_F parameter
     relative_error = zeros(length(disp),n-1);
     for count = 1:length(disp)
         
         sigma_F = disp(count); % seed dispersal radius forest trees
-        sigma_W = 0.01;%disp(count); % fire spread radius
-        sigma_R = 0.5;
+        sigma_W = 0.025;%disp(count); % fire spread radius
+        sigma_R = 0.15;
         
         %% Set up the initial distributions of the cover types on the grid
         % each row is one time step of the simulation
         % solution is a block matrix [LB; SOL; RB] where LB and RB are fixed
         % boundary conditions corresponding to a "reflecting-type boundary"
         if IC == 1
-            G0 = 1-0.05*(1+cos(12*pi*(0:delta:L)));
+            G0 = 1-0.1*(1+cos(3*pi*(0:delta:L)));
         elseif IC == 2
-            G0 = 0.05*(1+cos(12*pi*(0:delta:L)));
+            %G0 = 0.5*ones(1,N+1) + 0.025*(rand(1,N+1)-0.5);%+ 0.25*(cos(5*pi*(0:delta:L)))
         elseif IC == 3
             G0 = 0.5*(1+cos(12*pi*(0:delta:L)));
         elseif IC == 4
             G0 = phi(0.95, 0.05, 0:delta:L, 0.5, 0.1);
         else
-            G0 = rand(1,N+1);
+            G0 = 0.46*ones(1,N+1) + 0.025*(rand(1,N+1)-0.5);
         end
         LB_G = G0(1,1:end-1);
         RB_G = G0(1,2:end);
