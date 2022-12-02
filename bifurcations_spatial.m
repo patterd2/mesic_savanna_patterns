@@ -10,17 +10,17 @@ f_1 = 0.9;
 t_2 = 0.4;
 s_2 = 0.05;
 
-sigmaW = 0.01;
+sigmaW = 0.025;
 sigmaF = 0.1;
-sigmaR = 0.5;
+sigmaR = 0.05;
 
-r = 0.6:0.001:1;
-alpha = 0.91:0.001:6; % TC from all-grass state at alpha = 0.9
+r = 0.7:0.0005:0.9;
+alpha = 3:0.0005:6; % TC from all-grass state at alpha = 0.9
 conditions = -10*ones(length(alpha),length(r));
 tic;
 for jj = 1:length(alpha)
     for kk = 1:length(r)
-        %% Step 0: Find disjoint intervals which contain the equilibria (either one or two equilibria are possible)
+        % Step 0: Find disjoint intervals which contain the equilibria (either one or two equilibria are possible)
         dp = 0.00051;
         X1 = -0.01:dp:1.01; % all the solutions must lie in [0,1]
         X2 = X1+dp;
@@ -29,7 +29,7 @@ for jj = 1:length(alpha)
         X2 = X2(root_locations);
         num_roots = length(X1);
         roots = zeros(num_roots,1);
-        %% Step 1: Find the value of the homogeneous solution to the nonspatial system
+        % Step 1: Find the value of the homogeneous solution to the nonspatial system
         G = zeros(num_roots,1);
         for l=1:num_roots
             a = X1(l);
@@ -52,7 +52,7 @@ for jj = 1:length(alpha)
             % Asign the equilibrium values
             G(l) = p;
         end
-        %% Step 2: Disregard any unstable equilibria from the ODE - there will sometimes be a saddle between the two stable fixed points within the cusp region
+        % Step 2: Disregard any unstable equilibria from the ODE - there will sometimes be a saddle between the two stable fixed points within the cusp region
         stable = zeros(num_roots,1);
         for ii = 1:num_roots
             J_ODE = -(alpha(jj)/r(kk))*G(ii)*(1-G(ii)) + alpha(jj)*G(ii)*(1-(1-G(ii))/r(kk))-alpha(jj)*(1-G(ii))*(1-(1-G(ii))/r(kk))...
@@ -63,7 +63,7 @@ for jj = 1:length(alpha)
         end
         G = G(stable==1); % throw away unstable fixed points
         F = 1 - G;
-        %% Step 3: Compute the sufficient condition for pattern formation
+        % Step 3: Compute the sufficient condition for pattern formation
         wave_nums = 0:0.01:25;
         if isempty(G)==0
             for index = 1:length(G)
@@ -79,10 +79,15 @@ for jj = 1:length(alpha)
         end
     end
 end
+%%
 figure(3);
 imagesc(alpha,r,conditions');
 colormap(bluewhitered), colorbar;
+xlim([min(alpha) max(alpha)]);
+ylim([min(r) max(r)]);
 xlabel('alpha');
 ylabel('r');
 set(gca,'YDir','normal');
+set(gca,'linewidth',2);
+set(gca,'FontSize',24);
 toc;
