@@ -74,7 +74,9 @@ end
 figure(3);
 imagesc(alpha,r,0.5*(sign(conditions')+1));
 colormap(bluewhitered);
-xlabel('alpha');
+xlabel('\alpha');
 ylabel('r');
 set(gca,'YDir','normal');
+set(gca,'linewidth',2);
+set(gca,'FontSize',36);
 toc;

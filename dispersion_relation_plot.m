@@ -12,11 +12,12 @@ s_2 = 0.05;
 
 sigma_J = 0.1; % seed spread radius
 sigma_R = 0.4; % resource competition radius
-sigma_W = 0.05; % fire spread radius forest trees
+sigma_W = 0.01; % fire spread radius forest trees
 
 r = 1;
-alpha = 2.3;
-
+alpha = 2.2;
+%r = 0.8;
+%alpha = 4.5;
 
 %% Step 0: Find disjoint intervals which contain the equilibria (either one or two equilibria are possible)
 dp = 0.00011;
@@ -68,12 +69,14 @@ while l < num_roots+1
         wave_nums = 0:0.025:100;
         J = -(alpha/r)*G(l)*(1-G(l)).*GFT(wave_nums,sigma_R) + alpha*G(l)*(1-(1-G(l))/r).*GFT(wave_nums,sigma_J) -alpha*(1-G(l))*(1-(1-G(l))/r)...
             - phi(f_0, f_1, G(l), t_2, s_2) + phi_prime(f_0, f_1, G(l), t_2, s_2).*(1-G(l)).*GFT(wave_nums,sigma_W);
-            plot(wave_nums,J,'linewidth',2);
-    hold on;
+        plot(wave_nums,J,'.-b');
+        hold on;
     end
     l = l+1;
 end
-xlim([0 20]);
-set(gca,'FontSize',24);
+xlim([0 30]);
+ylim([-1.5 0.5]);
+set(gca,'linewidth',2);
+set(gca,'FontSize',36);
 grid on;
 hold on;
