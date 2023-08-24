@@ -11,10 +11,10 @@ SPACE_TIME_PLOT = 1;
 FINAL_PLOT = 1;
 %% Numerical method parameters
 L = 1; % working on [0,L]
-N = 601; % N+1 grid points
+N = 600; % N+1 grid points
 delta = L/N;  % spatial discretization parameter
 h = 0.1; % time discretisation parameter
-n = 2000; % number of time steps
+n = 5000; % number of time steps
 tau = (n-1)*h; % simulations time domain is [0,tau]
 %% Function definitions
 P_fun = @(x, p_0, p_1) p_0 + p_1.*x;
@@ -28,10 +28,10 @@ p_right=1;
 p_0=p_left;
 p_1=(p_right-p_left)/L;
 
-alpha = 8;
+alpha = 4.5;
 alpha_s = 0;
 
-r = 0.7;
+r = 0.84;
 
 f_0_ref = 0.1;
 f_1_ref = 0.9;
@@ -41,14 +41,14 @@ s_2 = 0.05;% s_2's standard value is 0.05
 linestyles = ['-',':','-.'];
 linecolor = ['r','k','b'];
 
-for IC = 2 % 1 for high grass IC, 2 for low grass IC, 3 for mixed spatial stripes between the two species, 4 for a sigmoidal transition
+for IC = 3 % 1 for high grass IC, 2 for low grass IC, 3 for mixed spatial stripes between the two species, 4 for a sigmoidal transition
     disp = 0.1; % value of sigma_F parameter
     relative_error = zeros(length(disp),n-1);
     for count = 1:length(disp)
         
         sigma_F = disp(count); % seed dispersal radius forest trees
-        sigma_W = 0.01;%disp(count); % fire spread radius
-        sigma_R = 0.03;
+        sigma_W = 0.025;%disp(count); % fire spread radius
+        sigma_R = 0.15;
         
         %% Set up the initial distributions of the cover types on the grid
         % each row is one time step of the simulation
@@ -59,11 +59,14 @@ for IC = 2 % 1 for high grass IC, 2 for low grass IC, 3 for mixed spatial stripe
         elseif IC == 2
             G0 = 0.4*ones(1,N+1) + 0.1*(rand(1,N+1)-0.5);%+ 0.05*(cos(10*pi*(0:delta:L))); %
         elseif IC == 3
-            G0 = 0.5*(1+cos(12*pi*(0:delta:L)));
+            G0 = 0.4*(1+cos(4*pi*(0:delta:L)))+0.1;
         elseif IC == 4
             G0 = phi(0.95, 0.05, 0:delta:L, 0.5, 0.1);
         else
-            G0 = 0.46*ones(1,N+1) + 0.025*(rand(1,N+1)-0.5);
+            %G0 = G;
+            %G0 = tempGsave;
+            %G0 = G(end,(N+1):(2*N+1));% + 0.05*rand(1,N+1); % perturbation of previous solution
+            %G0 = 0.46*ones(1,N+1) + 0.025*(rand(1,N+1)-0.5);
         end
         LB_G = G0(1,1:end-1);
         RB_G = G0(1,2:end);
@@ -192,7 +195,7 @@ c = colorbar;
 c.LineWidth = 1.5;
 set(h1, 'EdgeColor', 'none');
 ylabel('Time');
-caxis([0,1])
+clim([0,1]);
 xticks([1 floor((N+1)/2) floor((N+1))]);
 xticklabels({num2str(0), num2str(L/2), num2str(L)});
 yticks([1 floor(n/2) floor(n)]);

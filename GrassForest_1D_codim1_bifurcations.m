@@ -1,7 +1,7 @@
 tic
 %% Numerical method parameters
 L = 1; % working on [0,L]
-N = 401; % N+1 grid points
+N = 600; % N+1 grid points
 delta = L/N;  % spatial discretization parameter
 error_tolerance = 1e-14; % for the nonlinear solver
 eig_eps = 1e-7; % error tolerance for removing zero eigenvalue
@@ -19,10 +19,10 @@ p_right=0;
 p_0=p_left;
 p_1=(p_right-p_left)/L;
 
-alpha = 4.5;
+alpha = 5.6;
 alpha_s = 0;
 
-r = 0.77;
+r = 0.84;
 
 f_0_ref = 0.1;
 f_1_ref = 0.9;
@@ -32,11 +32,11 @@ s_2 = 0.05; % s_2's standard value is 0.05
 % Dispersal parameters
 sigma_F = 0.1; % seed dispersal radius forest trees
 sigma_W = 0.025; % fire spread radius
-sigma_R = 0.05;
+sigma_R = 0.15;
 
-disp = 5.49125:0.01:5.49125;
+disp = 4.8:0.01:4.99;
 %disp = 3.6125;%linspace(3.5,3.62,20);
-%disp = fliplr(disp);
+disp = fliplr(disp);
 branches = 1;
 n_eigs_saved=10;
 
@@ -60,9 +60,10 @@ for jj = 1:branches % 1 for high grass IC, 2 for low grass IC,
         alpha = disp(count);
         %% Set up the initial distributions of the cover types on the grid
         if count == 1
-            %G = 0.47*ones(1,N+1);% + 0.02*(sin(4*pi*(0:delta:L)));%+ 0.02*(cos(5*pi*(0:delta:L)));
+            %G = 0.445*ones(1,N+1);% + 0.02*(sin(4*pi*(0:delta:L)));%+ 0.02*(cos(5*pi*(0:delta:L)));
             %G = G + 0.01;%*(1+cos(3*pi*(0:delta:L)));
             %G = G(end,N+1:2*N+1); % if using time stepping result as initial condition
+            %G = tempGsave;
         end
         %if count == 1
         %0.1.*(1+cos(2*pi*(0:delta:L))) + 0.1.*(1+sin(pi*(0:delta:L)))...
@@ -226,8 +227,8 @@ end
 hold on;
 %xlabel('\alpha');
 %ylabel('||G||');
-xlim([5.25 6.25]);
-ylim([0.2 0.6]);
+xlim([4 9]);
+ylim([0.2 0.35]);
 set(gca,'linewidth',2);
 set(gca,'FontSize',24);
 grid on;
@@ -248,7 +249,7 @@ toc
 
 %% Code for saving figures
 %figure('codim1_diagram');
-saveas(gcf,'codim1_alpha_lowSigmaR_r=0.77_jan16.fig');
+%saveas(gcf,'codim1_alpha_highSigmaR_r=0.84_aug.fig');
 %saveas(gcf,'codim1_alpha_highSigmaR_r=0.9_jan12.fig');
 %openfig('codim1_alpha_highSigmaR_r=0.9.fig')
 % yticks([0 0.2 0.4 0.6 0.8 1])

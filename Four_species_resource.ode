@@ -1,0 +1,16 @@
+p alpha=0.5, beta=0.5, r = 0.84
+p gamma=0
+p mu=0.1, nu=0.05
+p s1=0.01, s2=0.05, w0=0.9, w1=0.4, t1=0.4, f1=0.9, t2=0.4, f0=0.1
+
+phi(G,S,TT)=(f0+(f1-f0)/(1+exp(-(G+gamma*(S+TT)-t2)/s2)))
+omega(G,S,TT)=(w0 + (w1-w0)/(1+exp(-(G+gamma*(S+TT)-t1)/s1)))
+
+aux F=1-G-S-TT
+
+G'=mu*S + nu*TT + phi(G,S,TT)*(1-(G+S+TT)) - beta*G*TT - alpha*G*(1-(G+S+TT))*(1 - (1-(G+S+TT))/r)
+S'=beta*G*TT - omega(G,S,TT)*S - mu*S - alpha*S*(1-(G+S+TT))*(1 - (1-(G+S+TT))/r)
+TT'=omega(G,S,TT)*S - nu*TT - alpha*TT*(1-(G+S+TT))*(1 - (1-(G+S+TT))/r)  
+
+@ total=300
+init G=0.1,S=0.1,TT=0.1

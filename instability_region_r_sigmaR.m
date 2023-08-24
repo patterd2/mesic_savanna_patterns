@@ -15,7 +15,7 @@ sigmaF = 0.1;
 
 sigmaR = 0.005:0.001:0.15;
 r = 0.6:0.001:1;
-alpha = 3.75;
+alpha = 8;%8;%5.5;%3.75;
 conditions = -10*ones(length(r),length(sigmaR));
 tic;
 for tt = 1:length(sigmaR)
@@ -64,7 +64,7 @@ for tt = 1:length(sigmaR)
         G = G(stable==1); % throw away unstable fixed points
         F = 1 - G;
         %% Step 3: Compute the sufficient condition for pattern formation
-        wave_nums = 0:0.01:25;
+        wave_nums = 0:0.01:250;
         if isempty(G)==0
             for index = 1:length(G)
                 conditions(kk,tt) = max(conditions(kk,tt), max(phi_prime(f_0, f_1, 1-F(index), t_2, s_2).*F(index).*kernel_FT(wave_nums,sigmaW) +...
@@ -91,7 +91,7 @@ xlim([min(r) max(r)]);
 ylim([min(sigmaR) max(sigmaR)]);
 xticks([0.6 0.7 0.8 0.9 1]);
 yticks([0 0.05 0.1 0.15]);
-
+grid on;
 %%
 toc;
 

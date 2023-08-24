@@ -10,12 +10,12 @@ f_1 = 0.9;
 t_2 = 0.4;
 s_2 = 0.05;
 
-sigmaW = 0.01;
+sigmaW = 0.025;
 sigmaF = 0.1;
-sigmaR = 0.4;
+sigmaR = 0.15;
 
-r = 0.01:0.001:1;
-alpha = 0.9:0.005:6; % TC from all-grass state at alpha = 0.9
+r = 0.7:0.001:1;
+alpha = 2.5:0.0025:9; % TC from all-grass state at alpha = 0.9
 conditions = -10*ones(length(alpha),length(r));
 tic;
 for jj = 1:length(alpha)
@@ -64,7 +64,7 @@ for jj = 1:length(alpha)
         G = G(stable==1); % throw away unstable fixed points
         F = 1 - G;
         % Step 3: Compute the necessary condition for pattern formation
-        wave_nums = 0:0.01:25;
+        wave_nums = 0:0.01:75;
         if isempty(G)==0
             for index = 1:length(G)
                 conditions(jj,kk) = max(conditions(jj,kk), max(phi_prime(f_0, f_1, 1-F(index), t_2, s_2).*F(index).*kernel_FT(wave_nums,sigmaW) +...
@@ -90,9 +90,11 @@ ylim([min(r) max(r)]);
 set(gca,'YDir','normal');
 set(gca,'linewidth',2);
 set(gca,'FontSize',36);
-xticks([1 2 3 4 5 6]);
-yticks([0.6 0.7 0.8 0.9 1]);
-ylim([0.6 1]);
-xlim([2 6]);
+xticks([3 4 5 6 7 8 9]);
+%yticks([0.6 0.7 0.8 0.9 1]);
+ylim([0.7 1]);
+xlim([2.5 9]);
 grid on;
+hold on;
+scatter(4.5,0.84);
 toc;
